@@ -33,6 +33,7 @@
     "emotion-server": "^10.0.6",
     "isomorphic-style-loader": "^4.0.0",
     "koa": "^2.7.0",
+    "koa-nunjucks-2": "^3.0.2",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "less": "^3.0.1",

@@ -1,26 +1,61 @@
-// import ReactDOMServer from 'react-dom/server';
 const Koa = require('koa');
 const app = new Koa();
 const path = require('path');
-const dom = require('./build/bundle').default;
-// const ele = require('./build/list');
+const koaNunjucks = require('koa-nunjucks-2');
 const React = require('react');
+const KoaRouter = require('koa-router');
 const ReactDOMServer = require('react-dom/server');
 const koaStatic = require('koa-static');
-const { renderStylesToString, extractCritical } = require('emotion-server');
+const router = new KoaRouter();
+
+const routerManagement = require('./app/router');
 const manifest = require('./public/manifest.json');
 
-let script = "";
-let link = "";
-for(let key in manifest) {
-  if(key.indexOf('.js') !== -1) {
-    script += `<script src="${manifest[key]}"></script>`;
+
+/**
+ * 处理链接
+ * @param {*要进行服务器渲染的文件名默认是build文件夹下的文件} fileName 
+ */
+function handleLink(fileName) {
+  let obj = {};
+  fileName = fileName.indexOf('.') !== -1 ? fileName.split('.')[0] : fileName;
+
+  try {
+    obj.script = `<script src="${manifest[`${fileName}.js`]}"></script>`;
+  } catch (error) {
+    console.error(new Error(error));
   }
-  if(key.indexOf('.css') !== -1) {
-    link += `<link rel="stylesheet" href="${manifest[key]}"/>`;
+  try {
+    obj.link = `<link rel="stylesheet" href="${manifest[`${fileName}.css`]}"/>`;
+    
+  } catch (error) {
+    console.error(new Error(error));
+  }
+  //服务器渲染
+  const dom = require(path.join(process.cwd(),`app/build/${fileName}.js`)).default;
+  let element = React.createElement(dom);
+  obj.html = ReactDOMServer.renderToString(element);
+
+  return obj;
+}
+
+/**
+ * 服务器渲染，渲染HTML，渲染模板
+ * @param {*} ctx 
+ */
+function renderServer(ctx) {
+  return (fileName, defineParams) => {
+    let obj = handleLink(fileName);
+    // 处理自定义参数
+    defineParams = String(defineParams) === "[object Object]" ? defineParams : {};
+    obj = Object.assign(obj, defineParams);
+    ctx.render('index', obj);
   }
 }
 
+/**
+ * 设置静态资源
+ */
 app.use(koaStatic(path.resolve(__dirname, './public'), {
   maxage: 0, //浏览器缓存max-age（以毫秒为单位）
   hidden: false, //允许传输隐藏文件
@@ -29,25 +64,30 @@ app.use(koaStatic(path.resolve(__dirname, './public'), {
   gzip: true, //当客户端支持gzip时，如果存在扩展名为.gz的请求文件，请尝试自动提供文件的gzip压缩版本。默认为true。
 }));
 
-app.use(async ctx => {
-  let element = React.createElement(dom);
-  const html = renderStylesToString(ReactDOMServer.renderToString(element));
-  ctx.body = `
-    <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <title>React SSR</title>
-        ${link}
-      </head>
-      <body>
-        <div id="app">${html}</div>
-      </body>
-      ${script}
-    </html>
-  `;
+/**
+ * 模板渲染
+ */
+app.use(koaNunjucks({
+  ext: 'html',
+  path: path.join(process.cwd(), 'app/view'),
+  nunjucksConfig: {
+    trimBlocks: true
+  }
+}));
 
+/**
+ * 渲染Html
+ */
+app.use(async (ctx, next) => {
+  ctx.renderServer = renderServer(ctx);
+  await next();
 });
+
+/**
+ * 注册路由
+ */
+routerManagement(router);
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(3000, () => {
   console.log("服务器已启动，请访问http://127.0.0.1:3000")

@@ -7,10 +7,13 @@ const webpack = require('webpack');
 
 const serverConfig = {
   target: 'node',
-  entry: './page/index.jsx',
+  entry: {
+    page1: './web/page/index.jsx',
+    page2: './web/page2/index.jsx'
+  },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, './build'),
+    filename: '[name].js',
+    path: path.resolve(__dirname, './app/build'),
     libraryTarget: 'umd'
   },
   mode: process.env.NODE_ENV,
@@ -43,7 +46,10 @@ const serverConfig = {
 };
 
 const clientConfig = {
-  entry: './renderClient.js',
+  entry: {
+    page1: './renderClient.js',
+    page2: './renderClient2.js'
+  },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, './public'),
