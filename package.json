@@ -1,0 +1,53 @@
+{
+  "name": "react-ssr",
+  "version": "0.0.1",
+  "description": "react服务器渲染模板",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env  NODE_ENV=production webpack --progress",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "react",
+    "ssr",
+    "node",
+    "javascript",
+    "babel",
+    "import",
+    "server"
+  ],
+  "author": "ruanguangguang",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "autoprefixer": "^9.4.7",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-import": "^1.11.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.0",
+    "emotion": "^10.0.6",
+    "emotion-server": "^10.0.6",
+    "isomorphic-style-loader": "^4.0.0",
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "less": "^3.0.1",
+    "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.4.3",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14",
+    "webpack-manifest-plugin": "^2.0.4",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
