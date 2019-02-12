@@ -4,15 +4,8 @@
  */
 
  exports.renderHtml = async (ctx) => {
-    ctx.renderServer("page1");
+    ctx.renderServer("page1", {store: JSON.stringify({ counter: 1 }) });
  }
-
- 
-
- exports.renderPage2 = async (ctx) => {
-  ctx.renderServer("page2");
- }
-
  exports.favicon = (ctx) => {
    ctx.body = null;
  }

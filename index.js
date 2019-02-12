@@ -16,7 +16,7 @@ const manifest = require('./public/manifest.json');
  * 处理链接
  * @param {*要进行服务器渲染的文件名默认是build文件夹下的文件} fileName 
  */
-function handleLink(fileName) {
+function handleLink(fileName, req, defineParams) {
   let obj = {};
   fileName = fileName.indexOf('.') !== -1 ? fileName.split('.')[0] : fileName;
 
@@ -33,7 +33,7 @@ function handleLink(fileName) {
   }
   //服务器渲染
   const dom = require(path.join(process.cwd(),`app/build/${fileName}.js`)).default;
-  let element = React.createElement(dom);
+  let element = React.createElement(dom(req, defineParams));
   obj.html = ReactDOMServer.renderToString(element);
 
   return obj;
@@ -45,7 +45,7 @@ function handleLink(fileName) {
  */
 function renderServer(ctx) {
   return (fileName, defineParams) => {
-    let obj = handleLink(fileName);
+    let obj = handleLink(fileName, ctx.req, defineParams);
     // 处理自定义参数
     defineParams = String(defineParams) === "[object Object]" ? defineParams : {};
     obj = Object.assign(obj, defineParams);

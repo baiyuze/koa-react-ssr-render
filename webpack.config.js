@@ -8,8 +8,13 @@ const webpack = require('webpack');
 const serverConfig = {
   target: 'node',
   entry: {
-    page1: './web/page/index.jsx',
-    page2: './web/page2/index.jsx'
+    page1: './serverRouter.js',
+  },
+  resolve: {
+    alias: {
+      action: path.join(__dirname, './web/action')
+    },
+    extensions: ['.js', '.jsx']
   },
   output: {
     filename: '[name].js',
@@ -47,14 +52,19 @@ const serverConfig = {
 
 const clientConfig = {
   entry: {
-    page1: './renderClient.js',
-    page2: './renderClient2.js'
+    page1: './clientRouter.js'
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, './public'),
   },
   mode: process.env.NODE_ENV,
+  resolve: {
+    alias: {
+      action: path.join(__dirname, './web/action')
+    },
+    extensions: ['.js', '.jsx']
+  },
   module: {
     rules: [
       {

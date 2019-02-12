@@ -7,10 +7,14 @@
   <title>koa-React服务器渲染</title>
   {{ link | safe }}
 </head>
+
 <body>
   <div id='app'>
     {{ html | safe }}
   </div>
 </body>
+<script>
+  window.__INIT_STORE__ = {{ store | safe }}
+</script>
 {{ script | safe }}
 </html>
