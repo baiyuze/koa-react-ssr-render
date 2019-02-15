@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env  NODE_ENV=production webpack --watch --progress",
+    "build": "cross-env  NODE_ENV=development webpack --watch --progress",
     "start": "node index.js"
   },
   "keywords": [
@@ -24,6 +24,7 @@
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.4.7",
+    "axios": "^0.18.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.0",

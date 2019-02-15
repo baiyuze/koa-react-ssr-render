@@ -3,23 +3,25 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const nodeExternals = require('webpack-node-externals');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const webpack = require('webpack');
 
+const resolve = {
+  alias: {
+    action: path.join(__dirname, './web/action')
+  },
+  extensions: ['.js', '.jsx']
+}
+
+//服务端配置
 const serverConfig = {
   target: 'node',
   entry: {
-    page1: './serverRouter.js',
+    page1: './web/render/serverRouter.js',
   },
-  resolve: {
-    alias: {
-      action: path.join(__dirname, './web/action')
-    },
-    extensions: ['.js', '.jsx']
-  },
+  resolve,
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, './app/build'),
-    libraryTarget: 'umd'
+    libraryTarget: 'commonjs'
   },
   mode: process.env.NODE_ENV,
   externals: [nodeExternals()],
@@ -49,22 +51,17 @@ const serverConfig = {
     ]
   }
 };
-
+//客户端
 const clientConfig = {
   entry: {
-    page1: './clientRouter.js'
+    page1: './web/render/clientRouter.js'
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, './public'),
   },
   mode: process.env.NODE_ENV,
-  resolve: {
-    alias: {
-      action: path.join(__dirname, './web/action')
-    },
-    extensions: ['.js', '.jsx']
-  },
+  resolve,
   module: {
     rules: [
       {
@@ -110,10 +107,7 @@ const clientConfig = {
       filename: `[name].css`,
       chunkFilename: `[name].chunk.css`
     }),
-    new ManifestPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.WEBPACK_WEB': true
-    })
+    new ManifestPlugin()
   ]
 
 };

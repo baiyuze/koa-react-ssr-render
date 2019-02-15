@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import counter from './counter'
+import * as page from './counter'
 
 const rootReducer = combineReducers({
-  counter
+  ...page
 })
 
 export default rootReducer

@@ -12,8 +12,8 @@ class Layout extends Component {
     return (
       <span>
 
-        <a href='/' style={{color: 'pink', fontSize: 50}}>首页</a>
-        <a href='/page2' style={{color: 'pink', fontSize: 50}}>次页</a>
+        <a href={`/`} style={{color: 'pink', fontSize: 50}}>首页</a>
+        <a href={`/page2`} style={{color: 'pink', fontSize: 50}}>次页</a>
         <a href="">{this.props.counter}</a>
         {
           this.props.children
@@ -23,7 +23,8 @@ class Layout extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  counter: state.counter
+  counter: state.counter,
+  state: state
 })
 
 const mapDispatchToProps = (dispatch) => {

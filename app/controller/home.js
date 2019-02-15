@@ -4,8 +4,15 @@
  */
 
  exports.renderHtml = async (ctx) => {
-    ctx.renderServer("page1", {store: JSON.stringify({ counter: 1 }) });
+    let initState = ctx.query.state ? JSON.parse(ctx.query.state) : null;
+    ctx.renderServer("page1", {store: JSON.stringify(initState ? initState : { counter: 1 }) });
  }
  exports.favicon = (ctx) => {
    ctx.body = null;
+ }
+
+ exports.test = (ctx) => {
+   ctx.body = {
+     data: `测试数据`
+   }
  }
