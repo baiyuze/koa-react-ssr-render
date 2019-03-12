@@ -8,7 +8,7 @@
     ctx.renderServer("page1", {store: JSON.stringify(initState ? initState : { counter: 1 }) });
  }
  exports.favicon = (ctx) => {
-   ctx.body = null;
+   ctx.body = 'xxx';
  }
 
  exports.test = (ctx) => {

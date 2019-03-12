@@ -43,16 +43,26 @@ function handleLink(fileName, req, defineParams) {
  * 服务器渲染，渲染HTML，渲染模板
  * @param {*} ctx 
  */
-function renderServer(ctx) {
-  return (fileName, defineParams) => {
+function renderServer(ctx, next) {
+  return async (fileName, defineParams) => {
+
     let obj = handleLink(fileName, ctx.req, defineParams);
     // 处理自定义参数
     defineParams = String(defineParams) === "[object Object]" ? defineParams : {};
     obj = Object.assign(obj, defineParams);
-    ctx.render('index', obj);
+    await ctx.render('index', obj);
   }
 }
-
+/**
+ * 模板渲染
+ */
+app.use(koaNunjucks({
+  ext: 'njk',
+  path: path.join(__dirname, 'app/view'),
+  nunjucksConfig: {
+    trimBlocks: true
+  }
+}));
 /**
  * 设置静态资源
  */
@@ -60,20 +70,11 @@ app.use(koaStatic(path.resolve(__dirname, './public'), {
   maxage: 0, //浏览器缓存max-age（以毫秒为单位）
   hidden: false, //允许传输隐藏文件
   index: 'index.html', // 默认文件名，默认为'index.html'
-  defer: false, //如果为true，则使用后return next()，允许任何下游中间件首先响应。
+  defer: true, //如果为true，则使用后return next()，允许任何下游中间件首先响应。
   gzip: true, //当客户端支持gzip时，如果存在扩展名为.gz的请求文件，请尝试自动提供文件的gzip压缩版本。默认为true。
 }));
 
-/**
- * 模板渲染
- */
-app.use(koaNunjucks({
-  ext: 'html',
-  path: path.join(process.cwd(), 'app/view'),
-  nunjucksConfig: {
-    trimBlocks: true
-  }
-}));
+
 
 /**
  * 渲染Html
@@ -82,6 +83,7 @@ app.use(async (ctx, next) => {
   ctx.renderServer = renderServer(ctx);
   await next();
 });
+
 
 /**
  * 注册路由
